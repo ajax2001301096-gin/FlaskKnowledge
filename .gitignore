@@ -3,3 +3,9 @@ __pycache__/
 venv/
 *.db
 .env
+
+# Bootstrap
+static/css/bootstrap*.css
+static/css/bootstrap*.min.css
+static/js/bootstrap*.js
+static/js/bootstrap*.min.js
