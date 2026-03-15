@@ -15,6 +15,7 @@ app.config['SECRET_KEY'] = os.urandom(24)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = '/login'
 
 class User(db.Model,UserMixin):
     __tablename__ = "user"
@@ -102,6 +103,7 @@ def logout():
     return redirect("/login")
 
 @app.route('/createChannel',methods=['POST','GET'])
+@login_required
 def createChannel():
     if request.method == 'POST':
         channel_name = request.form.get('channel_name')
@@ -119,6 +121,7 @@ def createChannel():
         return render_template("createChannel.html",errormessage="",title="チャンネル登録")
     
 @app.route('/editChannel/channel_id=<int:channel_id>',methods=['POST','GET'])
+@login_required
 def editChannel(channel_id):
     if request.method == 'POST':
         channel_name = request.form.get('channel_name')
@@ -140,6 +143,7 @@ def editChannel(channel_id):
         return render_template("editChannel.html",errormessage="",title="チャンネル編集",channel=channel)
     
 @app.route('/deleteChannel/channel_id=<int:channel_id>')
+@login_required
 def deleteChannel(channel_id):
     channel = Channel.query.get(channel_id)
     knowledges = Knowledge.query.filter_by(channel_id = channel_id).all()
@@ -155,6 +159,7 @@ def listKnowledge(channel_id):
     return render_template("listKnowledge.html",knowledges=knowledges,title="ナレッジ一覧")
 
 @app.route("/createKnowledge",methods=['POST','GET'])
+@login_required
 def createKnowledge():
     if request.method == "POST":
         channel_id = request.form.get('channel_id')
@@ -168,6 +173,7 @@ def createKnowledge():
         return render_template("createKnowledge.html",title="ナレッジ追加",errormessage="",channels=channels)
     
 @app.route("/editKnowledge/knowledge_id=<int:knowledge_id>",methods=['POST','GET'])
+@login_required
 def editKnowledge(knowledge_id):
     if request.method == "POST":
         channel_id = request.form.get('channel_id')
@@ -185,6 +191,7 @@ def editKnowledge(knowledge_id):
         return render_template("editKnowledge.html",knowledge = knowledge, channels = channels ,title="ナレッジ編集",errormessage="")
     
 @app.route("/deleteKnowledge/channel_id=<int:channel_id>/knowledge_id=<int:knowledge_id>")
+@login_required
 def deleteKnowledge(knowledge_id,channel_id):
     knowledge = Knowledge.query.get(knowledge_id)
     db.session.delete(knowledge)
@@ -208,12 +215,14 @@ def searchKnowledge():
     return render_template("searchKnowledge.html",knowledges=knowledge_list,keyword_str=keyword_str,title="ナレッジ一覧",errormessage=errormessage)
 
 @app.route("/userManager")
+@login_required
 def userManager():
     messages = get_flashed_messages(with_categories=True)
     users = User.query.filter_by(del_flg = False).all()
     return render_template("userManager.html",users=users,title="ユーザ管理",messages=messages)
 
 @app.route("/createUser",methods=['POST'])
+@login_required
 def createUser():
     email = request.form.get('email')
     first_name = request.form.get('first_name')
@@ -238,6 +247,7 @@ def createUser():
         return redirect('/userManager')
     
 @app.route("/deleteUser/user_id=<int:user_id>")
+@login_required
 def deleteUser(user_id):
     user = User.query.get(user_id)
     user.del_flg = True
@@ -246,6 +256,7 @@ def deleteUser(user_id):
     return redirect('/userManager')
 
 @app.route("/changePassword",methods=['POST','GET'])
+@login_required
 def changePassword():
     if request.method == "POST":
         new_password = request.form.get('new_password')
@@ -263,6 +274,7 @@ def changePassword():
         return render_template('changePassword.html',title="パスワード変更",messages=messages)
 
 @app.route("/resetPassword/user_id=<int:user_id>")
+@login_required
 def resetPassword(user_id):
     user = User.query.get(user_id)
     user.password = "knowledge123"
@@ -271,6 +283,7 @@ def resetPassword(user_id):
     return redirect("/userManager")
 
 @app.route("/editUser/user_id=<int:user_id>",methods=['POST'])
+@login_required
 def editUser(user_id):
     if request.method == "POST":
         index = request.form.get('index')
