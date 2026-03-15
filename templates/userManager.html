@@ -1,0 +1,63 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <div class="container d-flex justify-content-center message">
+    {% for key,message in messages %} {% if key == 'success' %}
+    <div class="alert alert-success w-50" role="alert">{{ message }}</div>
+    {% else %}
+    <div class="alert alert-danger w-50" role="alert">{{ message }}</div>
+    {% endif %} {% endfor %}
+  </div>
+  <form id="form"  method="POST">
+    <table class="table table-striped">
+      <tr>
+        <th>メールアドレス</th>
+        <th>姓</th>
+        <th>名</th>
+        <th>管理権限</th>
+        <th></th>
+        <th></th>
+        <th>パスワード</th>
+      </tr>
+      <tr>
+        <td>
+          <input type="text" id="email" class="form form-control w-75" name="email" placeholder="例) sample@example.com" required/>
+        </td>
+        <td>
+          <input id="first_name" class="form-control w-75" type="text" class="" name="first_name" required />
+        </td>
+        <td>
+          <input id="last_name" class="form-control w-75"  type="text"  class=""  name="last_name"  required/>
+        </td>
+        <td>
+          <input type="checkbox" name="administrator_flg" class="" />
+        </td>
+        <td>
+          <a class="btn btn-primary" onclick="return createUser()" >追加</a>
+        </td>
+      </tr>
+      {% for user in users %}
+      <tr id="tr{{ loop.index }}">
+        <input type="hidden" id="user_id{{ loop.index }}" value="{{ user.user_id }}">
+        <td id="email{{ loop.index }}">{{ user.email }}</td>
+        <td id="first_name{{ loop.index }}">{{ user.first_name }}</td>
+        <td id="last_name{{ loop.index }}">{{ user.last_name }}</td>
+        <td>
+          <input id="administrator_flg{{ loop.index }}" type="checkbox" {% if
+          user.administrator_flg == 1 %} checked {% endif %} disabled />
+        </td>
+        <td>
+          <a class="btn btn-secondary" onclick="return btnEditUser({{ loop.index }})" >編集</a>
+        </td>
+        <td>
+          <a href="{{ url_for('deleteUser',user_id=user.user_id) }}" class="btn btn-danger" onclick="return btnDelete()" >削除</a>
+        </td>
+        <td>
+          <a  href="{{ url_for('resetPassword',user_id=user.user_id) }}"  class="btn btn-secondary"  >初期化</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+    <input type="hidden" id="index" name="index">
+  </form>
+</div>
+{% endblock %}

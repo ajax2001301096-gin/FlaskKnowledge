@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <h3>ログイン</h3>
+  <div class="errormessage d-flex justify-content-center">
+    {% if errormessage != "" %}
+    <div class="alert alert-danger w-50 mb-4" role="alert">
+      {{ errormessage }}
+    </div>
+    {% else %} {% endif %}
+  </div>
+  <div class="form d-flex justify-content-center">
+    <form class="form w-50" action="/login" method="POST">
+      <label class="form form-label" for="">メールアドレス</label>
+      <input class="form form-control mb-3" type="text" name="email" required />
+      <label class="form form-label" for="">パスワード</label>
+      <input
+        class="form form-control mb-3"
+        type="password"
+        name="password"
+        required
+      />
+      <input class="btn btn-success" type="submit" value="ログイン" />
+    </form>
+  </div>
+</div>
+{% endblock %}

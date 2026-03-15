@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block content %}
+<div class="errormessage d-flex justify-content-center">
+  {% if errormessage != "" %}
+  <div class="alert alert-danger w-50 mb-4" role="alert">
+    {{ errormessage }}
+  </div>
+  {% else %} {% endif %}
+</div>
+<div class="container d-flex justify-content-center">
+  <form class="form w-75" action="{{ url_for('editChannel',channel_id=channel.channel_id) }}" method="POST">
+    <label class="form-label" for="">チャンネル</label>
+    <input
+      class="form form-control mb-3"
+      type="text"
+      name="channel_name" value="{{ channel.channel_name }}"
+      required
+    />
+    <label class="form-label" for="">概要</label>
+    <textarea
+      class="form form-control mb-3"
+      name="overview"
+      required
+    >{{ channel.overview }}</textarea>
+    <input class="btn btn-secondary" type="reset" value="リセット" />
+    <input class="btn btn-primary" type="submit" value="更新" />
+  </form>
+</div>
+{% endblock %}

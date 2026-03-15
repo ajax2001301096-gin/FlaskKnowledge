@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/bootstrap.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static',filename='css/style.css') }}"
+    />
+    <script src="{{ url_for('static',filename='js/base.js')}}"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    {% if current_user.is_authenticated %}
+    <nav class="navbar navber-light bg-light p-3">
+      <div class="container">
+        <a href="/" class="navbar-brand text-left" href="/">Knowledge</a>
+        <p class="navbar-brand text-right">
+          {{ current_user.first_name + current_user.last_name}}、こんにちは
+        </p>
+        <a class="btn btn-outline-danger" href="/logout">ログアウト</a>
+        {% if current_user.administrator_flg == 1 %}
+        <a class="btn btn-outline-dark" href="/userManager">ユーザ管理</a>
+        {% endif %}
+      </div>
+    </nav>
+    {% else %}
+    <nav class="navbar navber-light bg-light p-3">
+      <div class="container">
+        <a class="navbar-brand text-left" href="/">Knowledge</a>
+      </div>
+    </nav>
+    {% endif %}
+    <div class="container">
+      <p class="title">{{ title }}</p>
+    </div>
+    {% block content %} {% endblock %}
+  </body>
+</html>

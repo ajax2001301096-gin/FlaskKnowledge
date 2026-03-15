@@ -1,0 +1,29 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <form class="form w-50 mb-3" action="{{ url_for('searchKnowledge') }}">
+      <input class="form form-control mb-3" type="text" name="keyword_str" />
+      <input class="btn btn-primary" type="submit" value="検索" />
+      <a href="/createKnowledge" >ナレッジ追加</a>
+    </form>
+  </div>
+  <table class="table table-striped">
+    <tr>
+      <th>チャンネル名</th>
+      <th>ナレッジ</th>
+      <th>最終更新時間</th>
+    </tr>
+    {% for knowledge in knowledges %}
+    <tr>
+      <td>{{ knowledge.channel.channel_name }}</td>
+      <td>{{ knowledge.knowledge }}</td>
+      <td>
+        {% if knowledge.user_id == current_user.user_id %}
+        <a href="{{ url_for('editKnowledge',knowledge_id=knowledge.knowledge_id) }}">{{ knowledge.update_at.strftime("%Y-%m-%d %H:%M:%S") }}</a>
+        {% else %} {{ knowledge.update_at.strftime("%Y-%m-%d %H:%M:%S") }} {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
