@@ -69,6 +69,32 @@ with app.app_context():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route("/init")
+def init():
+    user = User(
+        email="user01@gmail.com",
+        password="user01",
+        first_name="Duy",
+        last_name="Hoan",
+        administrator_flg=True,
+        update_user_id=1,
+        update_at=datetime.now(),
+        update_number=1,
+        del_flg=False
+    )
+    db.session.add(user)
+    db.session.commit()
+
+    channel = Channel(
+        channel_name="Python",
+        overview="Pythonプログラミングについてのナレッジを共有します",
+        user_id=1,
+        update_at=datetime.now(),
+        update_number=1
+    )
+    db.session.add(channel)
+    db.session.commit()
+    return "初期データ作成完了"
 
 @app.route("/")
 def index():
